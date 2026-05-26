@@ -1,0 +1,15 @@
+---
+description: 每次 git 提交须同步更新 README.md 的更新记录
+alwaysApply: true
+---
+
+# README 与提交
+
+对本仓库做任何**会进入 git 提交的代码或文档改动**时：
+
+1. **必须**编辑根目录 `README.md`，在「## 更新记录」表格**顶部**追加一行：`日期 | 本次改动的简要说明`（与 commit 目的一致，一两句话即可）。
+2. 若新功能、新脚本或目录结构变化，同步更新 README 中对应章节（功能、结构、开发说明等），勿只改更新记录。
+3. 暂存时 **同时** `git add` 业务文件与 `README.md`；仓库已配置 pre-commit，漏改 README 会提交失败。
+4. 仅当本次 commit **只**修改 `README.md` 时，可只提交 README。
+
+日期格式：`YYYY-MM-DD`（与仓库现有记录一致）。
