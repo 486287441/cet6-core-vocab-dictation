@@ -1,0 +1,46 @@
+# 产品对话 / 选题中间产物（非运行时代码）
+对话 html/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# 编辑器与 IDE
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# 环境与密钥
+.env
+.env.*
+!.env.example
+
+# Node（若后续加构建或脚本）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python（本地脚本 / 校验）
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+
+# 日志与临时文件
+*.log
+*.tmp
+*.temp
+.cache/
+
+# 打包输出（若日后增加）
+dist/
+build/

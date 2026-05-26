@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f4ed" />
+  <meta name="color-scheme" content="light" />
+  <title>六级核心词背诵检测站</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <a class="skip-link" href="#app-main">跳到主内容</a>
+  <div class="page">
+    <header class="site-header">
+      <p class="site-kicker"><span class="site-kicker__en">CET-6</span> · 核心词背诵</p>
+      <h1 class="site-title">六级核心词背诵检测站</h1>
+      <p class="site-lede">闪卡背诵 · 键盘判词 · 分批通关</p>
+      <hr class="rule rule--header" aria-hidden="true" />
+      <p id="words-debug" class="words-debug" aria-live="polite">
+        <span class="words-debug__skeleton" aria-hidden="true"></span>
+        <span class="words-debug__text">加载词库中…</span>
+      </p>
+    </header>
+
+    <main id="app-main" class="app-main">
+      <div id="view-flashcard" class="view" hidden></div>
+      <div id="view-batch-stats" class="view" hidden></div>
+      <div id="view-celebrate" class="view" hidden></div>
+    </main>
+
+    <footer class="site-colophon" aria-hidden="true">
+      <hr class="rule rule--footer" />
+      <p>暖纸排版 · 墨蓝强调</p>
+    </footer>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
