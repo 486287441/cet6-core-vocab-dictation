@@ -285,7 +285,7 @@ function handleKeydown(event) {
   if (key === " " || key === "Spacebar") {
     event.preventDefault();
     if (!session.isRevealed()) {
-      showToast("先按 A 或 D");
+      showToast("先按记得（D）或不记得（A）");
       return;
     }
     flashcardView.tryAdvance();
@@ -318,7 +318,7 @@ function handleFlashcardActionClick(event) {
 
   if (action === "next") {
     if (!session.isRevealed()) {
-      showToast("先按 A 或 D");
+      showToast("先按记得（D）或不记得（A）");
       return;
     }
     flashcardView.tryAdvance();
