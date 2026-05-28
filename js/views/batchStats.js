@@ -10,13 +10,15 @@ import { iconArrowRight, iconBookOpen, iconCheckCircle } from "../ui/icons.js";
  * @param {number} data.totalBatches
  * @param {Word[]} data.forgottenList
  * @param {number} data.batchStartedAt
+ * @param {number} [data.batchStudyMs]
  * @param {() => void} data.onNextBatch
  * @returns {{ destroy: () => void }}
  */
 export function renderBatchStats(container, data) {
-  const { batchIndex, totalBatches, forgottenList, batchStartedAt, onNextBatch } =
+  const { batchIndex, totalBatches, forgottenList, batchStartedAt, batchStudyMs, onNextBatch } =
     data;
-  const elapsedMs = Math.max(0, Date.now() - batchStartedAt);
+  const elapsedMs =
+    typeof batchStudyMs === "number" ? Math.max(0, batchStudyMs) : Math.max(0, Date.now() - batchStartedAt);
   const isLastBatch = batchIndex + 1 >= totalBatches;
   container.innerHTML = `
     <section class="batch-stats">

@@ -8,6 +8,7 @@
  * @property {boolean} revealed
  * @property {boolean} completed
  * @property {number} batchStartedAt
+ * @property {number} batchStudyMs
  * @property {Word[]} everForgotten
  * @property {string[]} roundForgotten
  */
@@ -28,6 +29,8 @@
  * @property {() => boolean} isRevealed
  * @property {() => boolean} isCurrentForgotten
  * @property {() => number} getBatchStartedAt
+ * @property {() => number} getBatchStudyMs
+ * @property {(ms: number) => void} addStudyMs
  * @property {() => BatchSessionSnapshot} toSnapshot
  */
 
@@ -47,6 +50,7 @@ export function createBatchSession(batchWords, snapshot) {
   let revealed = false;
   let completed = false;
   let batchStartedAt = Date.now();
+  let batchStudyMs = 0;
 
   /** @type {Map<string, Word>} */
   const everForgotten = new Map();
@@ -60,6 +64,7 @@ export function createBatchSession(batchWords, snapshot) {
     revealed = snapshot.revealed;
     completed = snapshot.completed;
     batchStartedAt = snapshot.batchStartedAt;
+    batchStudyMs = Number.isFinite(snapshot.batchStudyMs) ? Math.max(0, snapshot.batchStudyMs) : 0;
     for (const item of snapshot.everForgotten) {
       if (item?.word) everForgotten.set(item.word, { word: item.word, meaning: item.meaning });
     }
@@ -173,6 +178,18 @@ export function createBatchSession(batchWords, snapshot) {
     return batchStartedAt;
   }
 
+  function getBatchStudyMs() {
+    return batchStudyMs;
+  }
+
+  /**
+   * @param {number} ms
+   */
+  function addStudyMs(ms) {
+    if (!Number.isFinite(ms) || ms <= 0 || ms >= 5000) return;
+    batchStudyMs += ms;
+  }
+
   function toSnapshot() {
     return {
       round,
@@ -181,6 +198,7 @@ export function createBatchSession(batchWords, snapshot) {
       revealed,
       completed,
       batchStartedAt,
+      batchStudyMs,
       everForgotten: getEverForgottenList(),
       roundForgotten: [...roundForgotten],
     };
@@ -201,6 +219,8 @@ export function createBatchSession(batchWords, snapshot) {
     isRevealed,
     isCurrentForgotten,
     getBatchStartedAt,
+    getBatchStudyMs,
+    addStudyMs,
     toSnapshot,
   };
 }

@@ -1,5 +1,3 @@
-import { load, save } from "./storage.js";
-
 /** @type {number | null} */
 let rafId = null;
 /** @type {number | null} */
@@ -9,8 +7,9 @@ let running = false;
 
 /**
  * @param {() => boolean} isActive
+ * @param {(deltaMs: number) => void} [onTick]
  */
-export function startStudyTimer(isActive) {
+export function startStudyTimer(isActive, onTick) {
   stopStudyTimer();
   running = true;
   lastTick = performance.now();
@@ -27,8 +26,7 @@ export function startStudyTimer(isActive) {
     if (lastTick !== null) {
       const delta = now - lastTick;
       if (delta > 0 && delta < 5000) {
-        const state = load();
-        save({ totalStudyMs: state.totalStudyMs + delta });
+        onTick?.(delta);
       }
     }
     lastTick = now;

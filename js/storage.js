@@ -119,6 +119,7 @@ function normalizeBatchSession(value) {
     revealed: Boolean(s.revealed),
     completed: Boolean(s.completed),
     batchStartedAt: s.batchStartedAt,
+    batchStudyMs: clampInt(s.batchStudyMs, 0, Number.MAX_SAFE_INTEGER, 0),
     everForgotten: Array.isArray(s.everForgotten)
       ? s.everForgotten
           .filter((x) => x && typeof x === "object")

@@ -33,6 +33,13 @@ let batchStatsView = null;
 let celebrateView = null;
 /** @type {PersistedState} */
 let appState = load();
+let pendingStudyDeltaMs = 0;
+
+function flushStudyDelta() {
+  if (pendingStudyDeltaMs <= 0) return;
+  persistNow({ totalStudyMs: appState.totalStudyMs + pendingStudyDeltaMs });
+  pendingStudyDeltaMs = 0;
+}
 
 /**
  * @param {AppView} name
@@ -47,8 +54,19 @@ function showView(name) {
   if (colophon) colophon.hidden = name === "flashcard";
 
   if (name === "flashcard") {
-    startStudyTimer(() => !views.flashcard?.hidden && Boolean(session));
+    startStudyTimer(
+      () => !views.flashcard?.hidden && Boolean(session),
+      (deltaMs) => {
+        if (!session) return;
+        session.addStudyMs(deltaMs);
+        pendingStudyDeltaMs += deltaMs;
+        if (pendingStudyDeltaMs >= 1000) {
+          flushStudyDelta();
+        }
+      },
+    );
   } else {
+    flushStudyDelta();
     stopStudyTimer();
   }
 }
@@ -132,6 +150,7 @@ function showBatchStatsFor(batchIndex) {
     totalBatches,
     forgottenList: snapshot?.everForgotten ?? [],
     batchStartedAt: snapshot?.batchStartedAt ?? Date.now(),
+    batchStudyMs: snapshot?.batchStudyMs ?? 0,
     onNextBatch: handleNextBatch,
   });
 
@@ -146,6 +165,7 @@ function showBatchStatsFor(batchIndex) {
 function handleBatchComplete() {
   if (!session) return;
 
+  flushStudyDelta();
   markBatchCompleted(currentBatchIndex);
 
   const snapshot = session.toSnapshot();
@@ -190,6 +210,7 @@ function completeLibrary() {
  * @param {{ testMode?: boolean }} [options]
  */
 function showCelebrate(options = {}) {
+  flushStudyDelta();
   teardownViews();
   session = null;
 
@@ -213,6 +234,7 @@ function showCelebrate(options = {}) {
 }
 
 function handleReplay() {
+  flushStudyDelta();
   celebrateView?.destroy();
   celebrateView = null;
   appState = resetLibrary();
@@ -338,6 +360,7 @@ function setDebugMessage(text, isError = false) {
 }
 
 window.addEventListener("beforeunload", () => {
+  flushStudyDelta();
   flushStudyTimer();
   if (session) persistProgress();
 });
