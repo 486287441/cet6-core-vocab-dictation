@@ -1,6 +1,7 @@
 /** @typedef {{ word: string, meaning: string }} Word */
 
 const BATCH_SIZE = 50;
+const WORDS_CACHE_BUSTER = "20260528-1";
 
 /**
  * @param {string} text
@@ -62,7 +63,7 @@ function parseCSVLine(line) {
  * @returns {Promise<Word[]>}
  */
 export async function loadWords() {
-  const response = await fetch("words.csv");
+  const response = await fetch(`words.csv?v=${WORDS_CACHE_BUSTER}`, { cache: "no-store" });
   if (!response.ok) {
     throw new Error(`无法加载词库：${response.status} ${response.statusText}`);
   }
