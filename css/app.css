@@ -1094,20 +1094,20 @@ body {
   }
 
   .flashcard__keys {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .flashcard__key-rule {
-    width: 48%;
-    height: 1px;
-  }
-
-  .flashcard__key {
-    padding: 0;
+    display: none;
   }
 
   .flashcard__actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .flashcard__action-btn {
+    min-height: 40px;
+    font-size: 0.875rem;
+  }
+
+  .flashcard__hints {
+    display: none;
   }
 }
