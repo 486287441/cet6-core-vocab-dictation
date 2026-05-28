@@ -62,6 +62,15 @@ export function createFlashcardView(container, options) {
         </div>
       </nav>
       <p class="flashcard__hints">← → 与 A / D 等效 · 先判词再按空格</p>
+      <nav class="flashcard__actions" aria-label="触控操作">
+        <button type="button" class="flashcard__action-btn" data-study-action="forgot">不记得</button>
+        <button type="button" class="flashcard__action-btn flashcard__action-btn--primary" data-study-action="next">
+          下一张
+        </button>
+        <button type="button" class="flashcard__action-btn" data-study-action="remember">
+          记得
+        </button>
+      </nav>
     </div>
   `;
 

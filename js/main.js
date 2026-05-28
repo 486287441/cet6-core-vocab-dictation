@@ -293,6 +293,39 @@ function handleKeydown(event) {
   }
 }
 
+/**
+ * @param {MouseEvent} event
+ */
+function handleFlashcardActionClick(event) {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  const actionButton = target.closest("[data-study-action]");
+  if (!(actionButton instanceof HTMLButtonElement)) return;
+  if (!flashcardView || !session || views.flashcard?.hidden) return;
+
+  const action = actionButton.dataset.studyAction;
+  if (action === "forgot") {
+    flashcardView.judge(false);
+    persistProgress();
+    return;
+  }
+
+  if (action === "remember") {
+    flashcardView.judge(true);
+    persistProgress();
+    return;
+  }
+
+  if (action === "next") {
+    if (!session.isRevealed()) {
+      showToast("先按 A 或 D");
+      return;
+    }
+    flashcardView.tryAdvance();
+    persistProgress();
+  }
+}
+
 function setDebugMessage(text, isError = false) {
   if (!debugEl) return;
   const textEl = debugEl.querySelector(".words-debug__text");
@@ -311,6 +344,7 @@ window.addEventListener("beforeunload", () => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   document.addEventListener("keydown", handleKeydown);
+  document.addEventListener("click", handleFlashcardActionClick);
 
   try {
     words = await loadWords();
