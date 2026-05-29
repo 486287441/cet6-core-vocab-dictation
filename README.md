@@ -135,6 +135,7 @@ git config core.hooksPath .githooks
 
 | 日期 | 说明 |
 | --- | --- |
+| 2026-05-29 | 新增 `.agents/skills/cloudbase` 开发技能与参考文档，便于 CloudBase 相关功能迭代 |
 | 2026-05-29 | `registerUser` 云函数注册改为 `externalUser`（外部用户），不占内部用户数配额 |
 | 2026-05-29 | 修复登录/注册无响应：改为自托管 CloudBase SDK（`js/vendor/cloudbase.full.js`），不再使用 esm.sh |
 | 2026-05-29 | 接入 CloudBase：静态托管上线、用户名密码登录/注册、学习进度云数据库同步、云函数 registerUser 与 cet6-api |
