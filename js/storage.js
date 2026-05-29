@@ -18,6 +18,7 @@ export const STORAGE_VERSION = 1;
  * @property {number | null} firstStudyAt
  * @property {number | null} libraryCompletedAt
  * @property {number} playthrough
+ * @property {number} [updatedAt] 云端同步时间戳（仅云文档）
  */
 
 /**
@@ -49,6 +50,28 @@ export function load() {
   } catch {
     return createDefaultState();
   }
+}
+
+/**
+ * 将云数据库文档转为本地状态结构。
+ * @param {Record<string, unknown>} doc
+ * @returns {PersistedState}
+ */
+export function normalizeStateFromCloud(doc) {
+  const state = normalizeState(doc);
+  if (typeof doc.updatedAt === "number") {
+    state.updatedAt = doc.updatedAt;
+  }
+  return state;
+}
+
+/**
+ * @param {PersistedState} state
+ */
+export function replaceLocalState(state) {
+  const next = normalizeState(state);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  return next;
 }
 
 /**

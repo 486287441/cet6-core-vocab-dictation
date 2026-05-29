@@ -1,0 +1,6 @@
+{
+  "envId": "your-env-id",
+  "region": "ap-shanghai",
+  "accessKey": "your-publishable-key-from-console",
+  "progressCollection": "cet6_vocab_progress"
+}

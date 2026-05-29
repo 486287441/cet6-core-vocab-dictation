@@ -1,0 +1,23 @@
+{
+  "envId": "a486287441-d8gafy6kv355efe2c",
+  "region": "ap-shanghai",
+  "functionRoot": "cloudfunctions",
+  "hosting": {
+    "root": ".",
+    "ignore": [
+      ".git/**",
+      ".agents/**",
+      ".cursor/**",
+      ".githooks/**",
+      "node_modules/**",
+      "plan/**",
+      "对话 html/**",
+      "design-system/**",
+      "cloudfunctions/**",
+      "config/cloudbase.config.json",
+      "config/cloudbase.config.deploy.json",
+      "*.md",
+      "需求.md"
+    ]
+  }
+}

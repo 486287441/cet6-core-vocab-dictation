@@ -19,6 +19,10 @@
       <h1 class="site-title">六级核心词背诵检测站</h1>
       <p class="site-lede">闪卡背诵 · 键盘判词 · 分批通关</p>
       <hr class="rule rule--header" aria-hidden="true" />
+      <p id="user-bar" class="user-bar" hidden>
+        <span id="user-label" class="user-bar__name"></span>
+        <button type="button" id="btn-logout" class="user-bar__logout">退出</button>
+      </p>
       <p id="words-debug" class="words-debug" aria-live="polite">
         <span class="words-debug__skeleton" aria-hidden="true"></span>
         <span class="words-debug__text">加载词库中…</span>
@@ -37,6 +41,7 @@
     </footer>
   </div>
 
-  <script type="module" src="js/main.js?v=20260528-1"></script>
+  <script src="js/vendor/cloudbase.full.js?v=20260529-3"></script>
+  <script type="module" src="js/main.js?v=20260529-3"></script>
 </body>
 </html>

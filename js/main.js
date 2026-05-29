@@ -4,8 +4,11 @@ import { showToast } from "./ui/toast.js";
 import { createFlashcardView } from "./views/flashcard.js";
 import { renderBatchStats } from "./views/batchStats.js";
 import { renderCelebrate } from "./views/celebrate.js";
-import { load, save, resetLibrary } from "./storage.js";
+import { load, save, resetLibrary, replaceLocalState } from "./storage.js";
 import { flushStudyTimer, startStudyTimer, stopStudyTimer } from "./studyTimer.js";
+import { requireAuth } from "./auth/gate.js?v=20260529-2";
+import { getCloudApp } from "./auth/client.js?v=20260529-2";
+import { hydrateProgress, scheduleCloudPush } from "./cloudProgress.js?v=20260529-2";
 
 /** @typedef {import('./state.js').BatchSession} BatchSession */
 /** @typedef {import('./storage.js').PersistedState} PersistedState */
@@ -18,6 +21,9 @@ const views = {
 };
 const headerEl = document.querySelector(".site-header");
 const debugEl = document.getElementById("words-debug");
+const userBarEl = document.getElementById("user-bar");
+const userLabelEl = document.getElementById("user-label");
+const logoutBtn = document.getElementById("btn-logout");
 
 /** @type {import('./words.js').Word[]} */
 let words = [];
@@ -86,6 +92,7 @@ function persistNow(patch = {}) {
     batchSession: session?.toSnapshot() ?? null,
     ...patch,
   });
+  scheduleCloudPush(appState);
 }
 
 function markBatchCompleted(batchIndex) {
@@ -365,16 +372,52 @@ window.addEventListener("beforeunload", () => {
   if (session) persistProgress();
 });
 
+/**
+ * @param {{ user_metadata?: { username?: string, nickname?: string }, email?: string, phone?: string }} user
+ */
+function showUserBar(user) {
+  if (!userBarEl || !userLabelEl) return;
+  const name =
+    user.user_metadata?.username ||
+    user.user_metadata?.nickname ||
+    user.email ||
+    user.phone ||
+    "已登录";
+  userLabelEl.textContent = name;
+  userBarEl.hidden = false;
+}
+
+async function handleLogout() {
+  try {
+    flushStudyDelta();
+    flushStudyTimer();
+    if (session) persistProgress();
+    const { auth } = await getCloudApp();
+    await auth.signOut();
+  } catch (err) {
+    console.warn("[退出]", err);
+  }
+  window.location.replace("login.html");
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   document.addEventListener("keydown", handleKeydown);
   document.addEventListener("click", handleFlashcardActionClick);
+  logoutBtn?.addEventListener("click", () => {
+    void handleLogout();
+  });
 
   try {
+    const user = await requireAuth();
+    showUserBar(user);
+    const local = load();
+    appState = replaceLocalState(await hydrateProgress(local));
     words = await loadWords();
     totalBatches = getTotalBatches(words);
-    setDebugMessage(`共 ${words.length} 词 · ${totalBatches} 批 · Shift+. 测庆祝`);
+    setDebugMessage(`共 ${words.length} 词 · ${totalBatches} 批 · 云端已同步`);
     restoreFromStorage();
   } catch (err) {
+    if (err instanceof Error && err.message === "redirect-login") return;
     const message =
       err instanceof Error ? err.message : "词库加载失败，请使用本地 HTTP 服务打开页面。";
     console.error("[启动]", err);

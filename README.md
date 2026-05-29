@@ -1,6 +1,6 @@
 # 六级核心词背诵检测站
 
-备考英语六级时，用闪卡快速检测每个核心词的**中文含义**是否背熟。纯前端静态页，本地打开即可，进度保存在浏览器 `localStorage`。
+备考英语六级时，用闪卡快速检测每个核心词的**中文含义**是否背熟。支持 **腾讯云开发 CloudBase** 部署：用户名密码登录，学习进度同步到云数据库；也可本地静态服务打开（需登录后使用云同步）。
 
 **在线仓库**：[github.com/486287441/cet6-core-vocab-dictation](https://github.com/486287441/cet6-core-vocab-dictation)
 
@@ -42,6 +42,17 @@ python -m http.server 8888
 
 浏览器访问 `http://localhost:8888/`。**不要用 `file://` 打开**，否则无法加载 `words.csv`。
 
+### 方式三（CloudBase 线上）
+
+| 项 | 说明 |
+| --- | --- |
+| 静态托管 | `https://a486287441-d8gafy6kv355efe2c-1336166531.tcloudbaseapp.com/` |
+| 登录 | 打开站点后进入 `login.html`，用户名 5–24 位字母数字下划线，密码至少 8 位 |
+| 进度 | 登录后自动与集合 `cet6_vocab_progress` 同步 |
+| 云函数 | `registerUser`（注册兜底）、`cet6-api`（健康检查 HTTP） |
+
+本地开发若需云登录，同样先访问 `/login.html`；配置见 `js/cloudbase-config.js`（Publishable Key）。
+
 ---
 
 ## 键盘快捷键
@@ -71,6 +82,12 @@ python -m http.server 8888
 │   └── ui/             # Toast、进度条等
 ├── scripts/            # 词库与状态机校验脚本
 ├── plan/               # 模块计划与技术方案
+├── login.html          # 用户名密码登录 / 注册
+├── js/auth/            # CloudBase 认证
+├── js/cloudProgress.js # 云数据库进度同步
+├── cloudfunctions/     # registerUser、cet6-api
+├── cloudbaserc.json    # 云开发部署配置
+├── config/             # CloudBase 环境配置（勿提交密钥）
 ├── start.bat / start.sh
 └── 需求.md             # 产品需求（PRD）
 ```
@@ -118,6 +135,8 @@ git config core.hooksPath .githooks
 
 | 日期 | 说明 |
 | --- | --- |
+| 2026-05-29 | 修复登录/注册无响应：改为自托管 CloudBase SDK（`js/vendor/cloudbase.full.js`），不再使用 esm.sh |
+| 2026-05-29 | 接入 CloudBase：静态托管上线、用户名密码登录/注册、学习进度云数据库同步、云函数 registerUser 与 cet6-api |
 | 2026-05-28 | 修复学习时长统计异常（按实际活跃学习时长累计），并在手机端将触控按钮固定到底部以稳定点击位置 |
 | 2026-05-28 | 调整“下一张”拦截提示文案为“先按记得（D）或不记得（A）”，键盘与触控提示保持一致 |
 | 2026-05-28 | 为 CSS/JS/词库请求增加版本参数与禁缓存读取，降低旧浏览器页面与词库不刷新的问题 |

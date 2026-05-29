@@ -20,6 +20,8 @@ ehthumbs.db
 .env
 .env.*
 !.env.example
+config/cloudbase.config.json
+config/cloudbase.config.deploy.json
 
 # Node（若后续加构建或脚本）
 node_modules/
