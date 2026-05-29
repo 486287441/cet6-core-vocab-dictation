@@ -87,7 +87,9 @@ async function registerViaFunction(username, password) {
   if (!result?.ok) {
     const message = result?.message || "注册失败";
     if (/配额|quota/i.test(message)) {
-      throw new Error("环境用户配额已满，无法注册新账号。请用已有账号登录，或在 CloudBase 控制台扩容/清理用户。");
+      throw new Error(
+        "环境授权用户配额已满，无法注册新账号。请用已有账号登录，或在控制台删除无用用户后重试。",
+      );
     }
     throw new Error(message);
   }

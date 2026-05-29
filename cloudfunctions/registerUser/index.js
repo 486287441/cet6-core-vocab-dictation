@@ -37,8 +37,10 @@ exports.main = async (event) => {
       NickName: username,
       Password: password,
       UserStatus: "ACTIVE",
+      Type: "externalUser",
+      Description: "网站注册用户（C 端外部用户）",
     });
-    return { ok: true, uid: res.Uid || res.UserId };
+    return { ok: true, uid: res.Uid || res.UserId, type: "externalUser" };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[registerUser]", err);
